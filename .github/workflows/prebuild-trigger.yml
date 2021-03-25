@@ -29,43 +29,12 @@ jobs:
              --data-raw '{
                "Type": "CloudEnvironment",
                "FriendlyName": "$FRIENDLY_NAME",
-               "ExperimentalFeatures": {
-                 "QueueResourceAllocation": false,
-                 "LocalCredentialHelper": false,
-                 "EnableDynamicHttpsDetection": false,
-                 "UnifiedContainerImplementation": false,
-                 "UsePrebuild": false
-               },
-               "Features": {},
                "Seed": {
                  "type": "Git",
-                 "moniker": "$MONIKER",
-                 "gitConfig": null,
-                 "recurseClone": false
-               },
-               "Personalization": {
-                 "dotfilesRepository": null,
-                 "dotfilesTargetPath": null,
-                 "dotfilesInstallCommand": null
-               },
-               "ContainerImage": null,
-               "Connection": {
-                 "sessionId": null,
-                 "sessionPath": null,
-                 "serviceUri": null,
-                 "relayEndpoint": null,
-                 "relaySas": null,
-                 "sessionToken": null,
-                 "hostPublicKeys": null
+                 "moniker": "$MONIKER"
                },
                "SkuName": "standardLinux32gb",
                "PlanId": "$PLAN_ID",
                "AutoShutdownDelayMinutes": 240,
-               "Secrets": [],
-               "DevContainerJson": null,
-               "Label": null,
-               "HasDevcontainerJson": false,
-               "Identity": null,
-               "GithubEnvironmentEndpoint": null,
                "CreateAsPrebuild": true
              }'
