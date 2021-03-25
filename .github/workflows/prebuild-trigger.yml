@@ -1,0 +1,72 @@
+# Creates a new image version when a new version of the devvm.json file is created.
+name: Prebuild
+
+# Run the workflow only when the devvm.json file has been updated in the master branch.
+on:
+  workflow_dispatch: 
+    branch: main
+    
+jobs:
+  create-prebuild:
+    name: Create prebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Queue request
+        env:
+          ENDPOINT: ${{secrets.CS_ENDPOINT}}
+          TOKEN: ${{github.token}}
+          FRIENDLY_NAME: ${{github.sha}}
+          MONIKER: ${{github.event.repository.html_url}}
+          PLAN_ID: ${{secrets.PLAN_ID}}
+        run: |
+          curl "$ENDPOINT" --anyauth --verbose \
+             -H 'Content-Type: application/json' \
+             -H 'Authorization: GitHub $TOKEN' \
+             --data-raw '{
+               "Type": "CloudEnvironment",
+               "FriendlyName": "$FRIENDLY_NAME",
+               "ExperimentalFeatures": {
+                 "QueueResourceAllocation": false,
+                 "LocalCredentialHelper": false,
+                 "EnableDynamicHttpsDetection": false,
+                 "UnifiedContainerImplementation": false,
+                 "UsePrebuild": false
+               },
+               "Features": {},
+               "Seed": {
+                 "type": "Git",
+                 "moniker": "$MONIKER",
+                 "gitConfig": null,
+                 "recurseClone": false
+               },
+               "Personalization": {
+                 "dotfilesRepository": null,
+                 "dotfilesTargetPath": null,
+                 "dotfilesInstallCommand": null
+               },
+               "ContainerImage": null,
+               "Connection": {
+                 "sessionId": null,
+                 "sessionPath": null,
+                 "serviceUri": null,
+                 "relayEndpoint": null,
+                 "relaySas": null,
+                 "sessionToken": null,
+                 "hostPublicKeys": null
+               },
+               "SkuName": "standardLinux32gb",
+               "PlanId": "$PLAN_ID",
+               "AutoShutdownDelayMinutes": 240,
+               "Secrets": [],
+               "DevContainerJson": null,
+               "Label": null,
+               "HasDevcontainerJson": false,
+               "Identity": null,
+               "GithubEnvironmentEndpoint": null,
+               "CreateAsPrebuild": true
+             }'
