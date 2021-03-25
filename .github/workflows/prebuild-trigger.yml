@@ -3,8 +3,7 @@ name: Prebuild
 
 # Run the workflow only when the devvm.json file has been updated in the master branch.
 on:
-  workflow_dispatch: 
-    branch: main
+  workflow_dispatch:
     
 jobs:
   create-prebuild:
