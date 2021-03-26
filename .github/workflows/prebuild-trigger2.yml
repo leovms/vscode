@@ -20,5 +20,12 @@ jobs:
         run: |
           $url = "${{github.api_url}}/vscs_internal/user/${{github.actor}}/codespaces";
           $headers = @{ 'Authorization' = ("Bearer ${{secrets.GHCS_TOKEN}}") };
-          $body = '{ "repository_id": ${{github.event.repository.id}}, "ref": "${{github.ref}}", "location": "WestUs2", "sku_name": "standardLinux32gb" }';
+          $body = @"
+          {
+              "repository_id": ${{github.event.repository.id}},
+              "ref": "${{github.ref}}",
+              "location": "WestUs2",
+              "sku_name": "standardLinux32gb"
+          }
+          "@;
           Invoke-RestMethod -Uri $url -Headers $headers -Method Post -Body $body;
