@@ -24,7 +24,7 @@ jobs:
           LOCATION: WestUs2
           SKU_NAME: standardLinux32gb
         run: |
-          curl "$ENDPOINT" --anyauth --verbose \
+          curl -L "$ENDPOINT" --verbose \
              -H 'Content-Type: application/json' \
              -H 'Authorization: Bearer $TOKEN' \
              --data-raw '{
