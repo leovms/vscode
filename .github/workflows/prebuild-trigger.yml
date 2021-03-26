@@ -8,7 +8,7 @@ on:
 jobs:
   create-prebuild:
     name: Create prebuild
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Dump GitHub context
         env:
@@ -16,25 +16,22 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
 
       - name: Queue request
-        env:
-          ENDPOINT: ${{secrets.CS_ENDPOINT}}
-          TOKEN: ${{github.token}}
-          FRIENDLY_NAME: ${{github.sha}}
-          MONIKER: ${{github.event.repository.html_url}}
-          PLAN_ID: ${{secrets.PLAN_ID}}
+        shell: powershell
         run: |
-          curl "$ENDPOINT" --anyauth --verbose \
-             -H 'Content-Type: application/json' \
-             -H 'Authorization: GitHub $TOKEN' \
-             --data-raw '{
-               "Type": "CloudEnvironment",
-               "FriendlyName": "$FRIENDLY_NAME",
-               "Seed": {
-                 "type": "Git",
-                 "moniker": "$MONIKER"
-               },
-               "SkuName": "standardLinux32gb",
-               "PlanId": "$PLAN_ID",
-               "AutoShutdownDelayMinutes": 240,
-               "CreateAsPrebuild": true
-             }'
+          $url = 'https://online.dev.core.vsengsaas.visualstudio.com/api/v1/environments';
+          $headers = @{ 'Authorization' = ("Bearer ${{secrets.GHCS_TOKEN}}") };
+          $body = @"
+          {
+            "Type": "CloudEnvironment",
+            "FriendlyName": "${{github.sha}}",
+            "Seed": {
+              "type": "Git",
+              "moniker": "${{github.event.repository.html_url}}"
+            },
+            "SkuName": "standardLinux32gb",
+            "PlanId": "${{secrets.PLAN_ID}}",
+            "AutoShutdownDelayMinutes": 240,
+            "CreateAsPrebuild": true
+          }
+          "@;
+          Invoke-RestMethod -Uri $url -Headers $headers -Method Post -Body $body;
