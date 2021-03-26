@@ -34,4 +34,4 @@ jobs:
             "CreateAsPrebuild": true
           }
           "@;
-          Invoke-RestMethod -Uri $url -Headers $headers -Method Post -Body $body;
+          Invoke-RestMethod -Uri $url -Method Post -Headers $headers -ContentType 'application/json' -Body $body;
