@@ -18,7 +18,7 @@ jobs:
       - name: Queue request
         shell: powershell
         run: |
-          $url = 'https://online.dev.core.vsengsaas.visualstudio.com/api/v1/environments';
+          $url = '${{secrets.CS_ENDPOINT}}';
           $headers = @{ 'Authorization' = ("GitHub ${{secrets.GHCS_TOKEN}}") };
           $body = @"
           {
