@@ -19,7 +19,7 @@ jobs:
         shell: powershell
         run: |
           $url = 'https://online.dev.core.vsengsaas.visualstudio.com/api/v1/environments';
-          $headers = @{ 'Authorization' = ("Bearer ${{secrets.GHCS_TOKEN}}") };
+          $headers = @{ 'Authorization' = ("GitHub ${{secrets.GHCS_TOKEN}}") };
           $body = @"
           {
             "Type": "CloudEnvironment",
