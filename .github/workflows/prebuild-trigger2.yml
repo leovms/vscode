@@ -8,7 +8,7 @@ on:
 jobs:
   create-prebuild:
     name: Create prebuild
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Dump GitHub context
         env:
@@ -16,20 +16,16 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
 
       - name: Queue request
-        env:
-          ENDPOINT: ${{github.api_url}}/vscs_internal/user/${{github.actor}}/codespaces
-          TOKEN: ${{secrets.GHCS_TOKEN}}
-          REPO_ID: ${{github.event.repository.id}}
-          REF: ${{github.ref}}
-          LOCATION: WestUs2
-          SKU_NAME: standardLinux32gb
+        shell: powershell
         run: |
-          curl -L "$ENDPOINT" --verbose \
-             -H 'Content-Type: application/json' \
-             -H 'Authorization: Bearer $TOKEN' \
-             --data-raw '{
-               "repository_id": $REPO_ID,
-               "ref": "$REF",
-               "location": "$LOCATION",
-               "sku_name": "$SKU_NAME"
-             }'
+          $url = "${{github.api_url}}/vscs_internal/user/${{github.actor}}/codespaces"
+          $headers = @{ 'Authorization' = ("Bearer ${{secrets.GHCS_TOKEN}}) }
+          $body = @"
+          {
+            "repository_id": ${{github.event.repository.id}},
+            "ref": "${{github.ref}}",
+            "location": "WestUs2",
+            "sku_name": "standardLinux32gb"
+          }
+          "@
+          Invoke-RestMethod -Uri $url -Headers $headers -Method Post -Body $body
