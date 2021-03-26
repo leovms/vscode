@@ -18,7 +18,7 @@ jobs:
       - name: Queue request
         env:
           ENDPOINT: ${{github.api_url}}/vscs_internal/user/${{github.actor}}/codespaces
-          TOKEN: ${{github.token}}
+          TOKEN: ${{secrets.GHCS_TOKEN}}
           REPO_ID: ${{github.repository.id}}
           REF: ${{github.ref}}
           LOCATION: WestUs2
