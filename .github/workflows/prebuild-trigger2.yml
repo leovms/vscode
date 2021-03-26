@@ -19,7 +19,7 @@ jobs:
         env:
           ENDPOINT: ${{github.api_url}}/vscs_internal/user/${{github.actor}}/codespaces
           TOKEN: ${{secrets.GHCS_TOKEN}}
-          REPO_ID: ${{github.repository.id}}
+          REPO_ID: ${{github.event.repository.id}}
           REF: ${{github.ref}}
           LOCATION: WestUs2
           SKU_NAME: standardLinux32gb
